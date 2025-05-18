@@ -45,4 +45,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /*
+     * Relationships
+    */
+
+    // One to Many
+    public function videos(){
+        return $this->hasMany(Video::class);
+    }
+
+    // One to Many
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 }
