@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     // Video Routes
     Route::get('/crear-video', [VideoController::class, 'createVideo'])->name('createVideo');
     Route::post('/guardar-video', [VideoController::class, 'saveVideo'])->name('saveVideo');
+    Route::get('/miniatura/{filename}', [VideoController::class, 'getImage'])->name('imageVideo');
 
 });
 Route::group([], base_path('./routes/auth.php'));

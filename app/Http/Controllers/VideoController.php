@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Response;
 
 class VideoController extends Controller
 {
@@ -17,6 +19,15 @@ class VideoController extends Controller
     {
         $this->middleware('auth');
     } */
+
+    public function index()
+    {
+        $videos = Video::orderBy('id', 'asc')->paginate(10)->get();
+
+        return view('video.table-videos')->with([
+            'videos' => $videos
+        ]);
+    }
 
     public function createVideo()
     {
@@ -45,5 +56,11 @@ class VideoController extends Controller
         ]);
 
         return redirect('dashboard')->with('success', 'El video se ha subido correctamente.');
+    }
+
+    public function getImage($filename)
+    {
+        $file = Storage::disk('public')->get($filename);
+        return new Response($file, 200);
     }
 }
