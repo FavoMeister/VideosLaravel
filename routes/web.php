@@ -18,9 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Video Routes
+    Route::get('/videos', [VideoController::class, 'index'])->name('verVideos');
     Route::get('/crear-video', [VideoController::class, 'createVideo'])->name('createVideo');
     Route::post('/guardar-video', [VideoController::class, 'saveVideo'])->name('saveVideo');
     Route::get('/miniatura/{filename}', [VideoController::class, 'getImage'])->name('imageVideo');
+    Route::get('/video/{video_id}', [VideoController::class, 'getVideoPage'])->name('verVideo');
 
 });
 Route::group([], base_path('./routes/auth.php'));

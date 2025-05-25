@@ -12,33 +12,25 @@
                 <div class="mb-4">
                     <label for="title" class="block text-gray-700 dark:text-gray-300">Título</label>
                     <input type="text" name="title" id="title" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-                    @error('title')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <x-input-error :messages="$errors->get('title')" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
                     <label for="description" class="block text-gray-700 dark:text-gray-300">Descripción</label>
                     <textarea name="description" id="description" class="mt-1 block w-full rounded border-gray-300 shadow-sm"></textarea>
-                    @error('description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
                     <label for="image" class="block text-gray-700 dark:text-gray-300">Miniatura</label>
                     <input type="file" name="image" id="image" class="mt-1 block w-full">
-                    @error('image')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <x-input-error :messages="$errors->get('image')" class="mt-2" />
                 </div>
 
                 <div class="mb-4">
                     <label for="video" class="block text-gray-700 dark:text-gray-300">Video</label>
                     <input type="file" name="video" id="video" class="mt-1 block w-full">
-                    @error('video')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <x-input-error :messages="$errors->get('video')" class="mt-2" />
                 </div>
 
                 <div>

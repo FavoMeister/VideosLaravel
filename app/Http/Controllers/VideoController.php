@@ -22,7 +22,7 @@ class VideoController extends Controller
 
     public function index()
     {
-        $videos = Video::orderBy('id', 'asc')->paginate(10)->get();
+        $videos = Video::orderBy('id', 'asc')->paginate(10);
 
         return view('video.table-videos')->with([
             'videos' => $videos
@@ -44,10 +44,10 @@ class VideoController extends Controller
             'title' => 'required|string|min:5',
             'description' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'video' => 'nullable|video|mimes:mp4,mkv|max:2048',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/x-matroska|max:20480',
         ]);
         $imgRoute = $request->hasFile('image') ? $request->image->store('images', 'public') : '';
-        $videoRoute = $request->hasFile('video') ? $request->image->store('videos', 'public') : '';
+        $videoRoute = $request->hasFile('video') ? $request->video->store('videos', 'public') : '';
         Video::create([
             ...$validated,
             'image' => $imgRoute,
@@ -55,12 +55,21 @@ class VideoController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect('dashboard')->with('success', 'El video se ha subido correctamente.');
+        return redirect()->route('verVideos')->with('success', 'El video se ha subido correctamente.');
     }
 
     public function getImage($filename)
     {
         $file = Storage::disk('public')->get($filename);
         return new Response($file, 200);
+    }
+
+    public function getVideoPage($vide_id)
+    {
+        $video = Video::findOrFail($vide_id);
+
+        return view('video.detail')->with([
+            'video' => $video
+        ]);
     }
 }
