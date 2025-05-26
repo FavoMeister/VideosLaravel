@@ -9,13 +9,13 @@
                     {{-- <a href="{{ route('videos.edit', $video) }}" class="inline-flex items-center px-3 py-1 border border-yellow-300 dark:border-yellow-600 rounded-md text-xs font-medium text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-gray-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
                         Editar
                     </a> --}}
-                    {{-- <form method="POST" action="{{ route('videos.destroy', $video) }}">
+                    <form method="POST" action="{{ route('delete.video', $video) }}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="inline-flex items-center px-3 py-1 border border-red-300 dark:border-red-600 rounded-md text-xs font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-gray-800 hover:bg-red-100 dark:hover:bg-gray-700 transition-colors">
-                            Eliminar
+                            Eliminar Video
                         </button>
-                    </form> --}}
+                    </form>
                 </div>
             @endif
         </div>
@@ -66,7 +66,15 @@
                         @csrf
                         <div class="flex space-x-4">
                             <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                                @if(auth()->user()->profile_photo_path)
+                                    <img class="h-10 w-10 rounded-full" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                                @else
+                                    <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                    </div>
+                                @endif
                             </div>
                             <div class="flex-grow">
                                 <textarea name="content" rows="2" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Añade un comentario..." required></textarea>
@@ -80,10 +88,18 @@
                     
                     <!-- Lista de Comentarios -->
                     <div class="space-y-6">
-                        @forelse ($video->comments as $comment)
+                        @forelse ($video->commentsOrdered as $comment)
                             <div class="flex space-x-4">
                                 <div class="flex-shrink-0">
-                                    <img class="h-10 w-10 rounded-full" src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}">
+                                    @if(auth()->user()->profile_photo_path)
+                                        <img class="h-10 w-10 rounded-full" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="flex-grow">
                                     <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">

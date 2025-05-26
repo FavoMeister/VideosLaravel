@@ -23,21 +23,25 @@ class CommentController extends Controller
         ]);
 
         return redirect()
-                ->route('verVideo', ['video_id' => $video->id])
+                ->route('verVideo', $video->id)
                 ->with('success', 'Comentario agregado correctamente.');
     }
 
     public function destroy(Comment $comment)
     {
+        if (auth()->id() !== $comment->user_id) {
+            return back()->with('error', 'No tienes permiso para eliminar este comentario');
+        }
         try {
+            $videoId = $comment->video_id;
             $comment->delete();
             return redirect()
-               ->route('verVideo', $comment->video->id)
-               ->with('success', 'Comentario eliminado correctamente');
-        } catch (ModelNotFoundException $e) {
-            return redirect()
-               ->route('verVideo', $comment->video->id)
-               ->with('error', 'Comentario no existe o ya fue eliminado');
+                ->route('verVideo', $videoId)
+                ->with('success', 'Comentario eliminado correctamente');
+            
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Ocurrió un error al eliminar el comentario');
         }
     }
 }

@@ -72,4 +72,29 @@ class VideoController extends Controller
             'video' => $video
         ]);
     }
+
+    public function destroy(Video $video)
+    {
+        if (auth()->id() !== $video->user_id) {
+            return back()->with('error', 'No tienes permiso para eliminar este video');
+        }
+        try {
+            if ($video->image && Storage::disk('public')->exists($video->image)) {
+                Storage::disk('public')->delete($video->image);
+            }
+            if ($video->video_path && Storage::disk('public')->exists($video->video_path)) {
+                Storage::disk('public')->delete($video->video_path);
+            }
+            $video->comments()->delete();
+
+            $video->delete();
+            return redirect()
+                ->route('verVideos')
+                ->with('success', 'Video eliminado correctamente');
+            
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Ocurrió un error al eliminar el video');
+        }
+    }
 }

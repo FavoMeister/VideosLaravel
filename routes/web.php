@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/guardar-video', [VideoController::class, 'saveVideo'])->name('saveVideo');
     Route::get('/miniatura/{filename}', [VideoController::class, 'getImage'])->name('imageVideo');
     Route::get('/video/{video_id}', [VideoController::class, 'getVideoPage'])->name('verVideo');
+    Route::delete('eliminar-video/{video}', [VideoController::class, 'destroy'])->name('delete.video');
 
     // Comments
     Route::post('/registrar-comentario/{video}', [CommentController::class, 'store'])->name('comment');
