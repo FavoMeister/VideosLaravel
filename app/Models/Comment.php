@@ -11,6 +11,12 @@ class Comment extends Model
      *
      * @var list<string>
      */
+    protected $fillable = [
+        'user_id',
+        'video_id',
+        'body',
+    ];
+    
     protected $table = 'comments';
 
     public $timestamps = true;

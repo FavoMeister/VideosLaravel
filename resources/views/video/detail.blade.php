@@ -62,7 +62,7 @@
                     
                     <!-- Formulario para nuevo comentario -->
                     @auth
-                    {{-- <form method="POST" action="{{ route('comments.store', $video) }}" class="mb-6">
+                    <form method="POST" action="{{ route('comment', $video) }}" class="mb-6">
                         @csrf
                         <div class="flex space-x-4">
                             <div class="flex-shrink-0">
@@ -75,39 +75,39 @@
                                 </button>
                             </div>
                         </div>
-                    </form> --}}
+                    </form>
                     @endauth
                     
                     <!-- Lista de Comentarios -->
                     <div class="space-y-6">
                         @forelse ($video->comments as $comment)
-                        <div class="flex space-x-4">
-                            <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full" src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}">
-                            </div>
-                            <div class="flex-grow">
-                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ $comment->user->name }}</h4>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</p>
+                            <div class="flex space-x-4">
+                                <div class="flex-shrink-0">
+                                    <img class="h-10 w-10 rounded-full" src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}">
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900 dark:text-white">{{ $comment->user->name }}</h4>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</p>
+                                            </div>
+                                            @if(auth()->id() == $comment->user_id)
+                                                <form method="POST" action="{{ route('deleteComment', $comment) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
-                                        {{-- @if(auth()->id() == $comment->user_id)
-                                        <form method="POST" action="{{ route('comments.destroy', $comment) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
-                                                Eliminar
-                                            </button>
-                                        </form>
-                                        @endif --}}
+                                        <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $comment->body }}</p>
                                     </div>
-                                    <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $comment->content }}</p>
                                 </div>
                             </div>
-                        </div>
                         @empty
-                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-center py-4">No hay comentarios aún. ¡Sé el primero en comentar!</p>
                         @endforelse
                     </div>
                 </div>

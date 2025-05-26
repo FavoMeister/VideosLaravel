@@ -30,17 +30,17 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+                @if(session('success'))
+                    <div 
+                        x-data="{ show: true }"
+                        x-init="setTimeout(() => show = false, 5000)"
+                        x-show="show"
+                        class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg transition-opacity duration-500">
+                        {{ session('success') }}
+                    </div>
+                @endif
             </main>
-            @if(session('success'))
-                <div 
-                    x-data="{ show: true }"
-                    x-init="setTimeout(() => show = false, 3000)"
-                    x-show="show"
-                    class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg transition-opacity duration-300"
-                >
-                    {{ session('success') }}
-                </div>
-            @endif
+            
         </div>
     </body>
 </html>

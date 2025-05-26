@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/guardar-video', [VideoController::class, 'saveVideo'])->name('saveVideo');
     Route::get('/miniatura/{filename}', [VideoController::class, 'getImage'])->name('imageVideo');
     Route::get('/video/{video_id}', [VideoController::class, 'getVideoPage'])->name('verVideo');
+
+    // Comments
+    Route::post('/registrar-comentario/{video}', [CommentController::class, 'store'])->name('comment');
+    Route::delete('eliminar-comentario/{comment}', [CommentController::class, 'destroy'])->name('deleteComment');
 
 });
 Route::group([], base_path('./routes/auth.php'));
