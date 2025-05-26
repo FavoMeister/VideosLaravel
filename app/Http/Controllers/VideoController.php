@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Response;
 
@@ -95,6 +97,67 @@ class VideoController extends Controller
         } catch (\Exception $e) {
             return back()
                 ->with('error', 'Ocurrió un error al eliminar el video');
+        }
+    }
+
+    public function edit(Video $video)
+    {
+        if (auth()->id() !== $video->user_id) {
+            return back()->with('error', 'No tienes permiso para editar este video');
+        }
+        return view('video.edit-video')->with([
+            'video' => $video,
+            'method' => 'PUT',
+            'title' => 'Editar Video ' . $video->title
+        ]);
+    }
+
+    public function update(Video $video, Request $request)
+    {
+        if (auth()->id() !== $video->user_id) {
+            return back()->with('error', 'No tienes permiso para actualizar este video');
+        }
+        $validated = $request->validate([
+            'title' => 'required|string|min:5',
+            'description' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/x-matroska|max:20480',
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            if ($request->hasFile('image')) {
+                if ($video->image && Storage::disk('public')->exists($video->image)) {
+                    Storage::disk('public')->delete($video->image);
+                }
+                $validated['image'] = $request->file('image')->store('images', 'public');
+            } else {
+                $validated['image'] = $video->image;
+            }
+            if ($request->hasFile('video')) {
+                if ($video->video_path && Storage::disk('public')->exists($video->video_path)) {
+                    Storage::disk('public')->delete($video->video_path);
+                }
+                $validated['video_path'] = $request->file('video')->store('videos', 'public');
+            } else {
+                $validated['video_path'] = $video->video_path;
+            }
+            $video->update($validated);
+            
+            DB::commit();
+
+            return redirect()->route('verVideos')
+                    ->with('success', 'Video actualizado correctamente');
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        
+            Log::error('Error al actualizar video: ' . $th->getMessage());
+
+            return redirect()->back()
+                    ->with('error', 'Ocurrió un error al actualizar el video')
+                    ->withInput();
         }
     }
 }

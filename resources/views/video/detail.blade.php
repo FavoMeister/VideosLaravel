@@ -4,11 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ $video->title }}
             </h2>
-            @if(auth()->id() == $video->user_id)
+            @if(auth()->check() && auth()->id() == $video->user_id)
                 <div class="flex space-x-2">
-                    {{-- <a href="{{ route('videos.edit', $video) }}" class="inline-flex items-center px-3 py-1 border border-yellow-300 dark:border-yellow-600 rounded-md text-xs font-medium text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-gray-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
-                        Editar
-                    </a> --}}
+                    <a href="{{ route('edit.video', $video) }}" class="inline-flex items-center px-3 py-1 border border-yellow-300 dark:border-yellow-600 rounded-md text-xs font-medium text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-gray-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
+                        Editar Video
+                    </a>
                     <form method="POST" action="{{ route('delete.video', $video) }}">
                         @csrf
                         @method('DELETE')
@@ -66,7 +66,7 @@
                         @csrf
                         <div class="flex space-x-4">
                             <div class="flex-shrink-0">
-                                @if(auth()->user()->profile_photo_path)
+                                @if(auth()->check() && auth()->user()->profile_photo_path)
                                     <img class="h-10 w-10 rounded-full" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
                                 @else
                                     <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
@@ -91,7 +91,7 @@
                         @forelse ($video->commentsOrdered as $comment)
                             <div class="flex space-x-4">
                                 <div class="flex-shrink-0">
-                                    @if(auth()->user()->profile_photo_path)
+                                    @if(auth()->check() && auth()->user()->profile_photo_path)
                                         <img class="h-10 w-10 rounded-full" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
                                     @else
                                         <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
